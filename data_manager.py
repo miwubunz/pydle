@@ -4,6 +4,14 @@ from prompt_toolkit import print_formatted_text, HTML
 from prompt_toolkit.styles import Style
 
 DEFAULT_SAVE_PATH = "data.json"
+DEFAULT_STYLE = {
+	"wrong_word": "#54411a",
+	"right_place": "#98f98b",
+	"wrong_place": "#f9f88b",
+	"error": "#fc4737",
+	"win": "#5cf990",
+	"lose": "#f9645c"
+}
 
 data: dict = {}
 
@@ -26,21 +34,14 @@ def save_data():
 def data_exists() -> bool:
 	return os.path.exists(DEFAULT_SAVE_PATH)
 
-def get_default_style() -> dict:
-	return {
-		"wrong_word": "#54411a",
-		"right_place": "#98f98b",
-		"wrong_place": "#f9f88b",
-		"error": "#fc4737",
-		"win": "#5cf990",
-		"lose": "#f9645c"
-	}
-
 def get_default_dictionary() -> dict:
 	return {
 		"tries": 5,
-		"style": get_default_style()
+		"style": DEFAULT_STYLE
 	}
+
+def get_default_style() -> Style:
+	return Style.from_dict(DEFAULT_STYLE)
 
 def is_data_correct(dictionary: dict, reference: dict = get_default_dictionary()) -> bool:
 	for i in reference:
@@ -53,11 +54,11 @@ def is_data_correct(dictionary: dict, reference: dict = get_default_dictionary()
 				else:
 					continue
 			else:
-				print_formatted_text(HTML(f"<error>type of key \"{i}\" is not correct.\nexpected \"{types[0].__name__}\", got \"{types[1].__name__}\".</error>"), style=get_style())
+				print_formatted_text(HTML(f"<error>type of key \"{i}\" is not correct.\nexpected \"{types[0].__name__}\", got \"{types[1].__name__}\".</error>"), style=get_default_style())
 		else:
-			print_formatted_text(HTML(f"<error>key \"{i}\" is missing.</error>"), style=get_style())
+			print_formatted_text(HTML(f"<error>key \"{i}\" is missing.</error>"), style=get_default_style())
 		return False
 	return True
 
 def get_style() -> dict:
-	return Style.from_dict(data.get("style", get_default_style()))
+	return Style.from_dict(data.get("style", DEFAULT_STYLE))
