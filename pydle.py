@@ -1,5 +1,5 @@
 import argparse
-import os
+from pathlib import Path
 import wordlist_parser
 import random
 from prompt_toolkit import prompt, print_formatted_text, HTML
@@ -77,9 +77,9 @@ def input_guess():
 		sys.stdout.write("\033[F\033[K")
 		input_guess()
 
-file_path = data.get("path", "") if os.path.splitext(data.get("path", ""))[1] != "" else data.get("path", "") + ".wordlist"
+file_path = data.get("path", "") if Path(data.get("path", "")).suffix != "" else data.get("path", "") + ".wordlist"
 
-if os.path.exists(file_path):
+if Path(file_path).exists():
 	with open(file_path, 'r') as file:
 		wordlist = wordlist_parser.get_words_from_wordlist(file.read())
 		start_game()

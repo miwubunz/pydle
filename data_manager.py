@@ -1,5 +1,5 @@
 import json
-import os
+from pathlib import Path
 from prompt_toolkit import print_formatted_text, HTML
 from prompt_toolkit.styles import Style
 
@@ -16,7 +16,7 @@ DEFAULT_STYLE = {
 data: dict = {}
 
 def setup_data() -> dict:
-	if os.path.exists(DEFAULT_SAVE_PATH):
+	if data_exists():
 		with open(DEFAULT_SAVE_PATH, 'r') as file:
 			global data
 			data = json.loads(file.read())
@@ -32,7 +32,7 @@ def save_data():
 		file.write(json.dumps(data, indent="\t"))
 
 def data_exists() -> bool:
-	return os.path.exists(DEFAULT_SAVE_PATH)
+	return Path(DEFAULT_SAVE_PATH).exists()
 
 def get_default_dictionary() -> dict:
 	return {
@@ -54,9 +54,9 @@ def is_data_correct(dictionary: dict, reference: dict = get_default_dictionary()
 				else:
 					continue
 			else:
-				print_formatted_text(HTML(f"<error>type of key \"{i}\" is not correct.\nexpected \"{types[0].__name__}\", got \"{types[1].__name__}\".</error>"), style=get_default_style())
+				raise TypeError(f"type of key \"{i}\" is not correct.\nexpected \"{types[0].__name__}\", got \"{types[1].__name__}\".")
 		else:
-			print_formatted_text(HTML(f"<error>key \"{i}\" is missing.</error>"), style=get_default_style())
+			raise TypeError(f"key \"{i}\" is missing.")
 		return False
 	return True
 
