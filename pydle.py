@@ -78,10 +78,10 @@ def input_guess():
 		input_guess()
 
 file_path = data.get("path", "") if Path(data.get("path", "")).suffix != "" else data.get("path", "") + ".wordlist"
+path = Path(file_path)
 
-if Path(file_path).exists():
-	with open(file_path, 'r') as file:
-		wordlist = wordlist_parser.get_words_from_wordlist(file.read())
-		start_game()
+if path.exists():
+	wordlist = wordlist_parser.get_words_from_wordlist(path.read_text())
+	start_game()
 else:
 	print_formatted_text(HTML(f"<error>file \"{file_path}\" does not exist.</error>"), style=data_manager.get_style())

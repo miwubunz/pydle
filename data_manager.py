@@ -17,19 +17,16 @@ data: dict = {}
 
 def setup_data() -> dict:
 	if data_exists():
-		with open(DEFAULT_SAVE_PATH, 'r') as file:
-			global data
-			data = json.loads(file.read())
-			return data
+		global data
+		data = json.loads(Path(DEFAULT_SAVE_PATH).read_text())
+		return data
 	else:
-		with open(DEFAULT_SAVE_PATH, 'w') as file:
-			data = get_default_dictionary()
-			file.write(json.dumps(data, indent="\t"))
-			return data
+		data = get_default_dictionary()
+		save_data()
+		return data
 
 def save_data():
-	with open(DEFAULT_SAVE_PATH, 'w') as file:
-		file.write(json.dumps(data, indent="\t"))
+	Path(DEFAULT_SAVE_PATH).write_text(json.dumps(data, indent="\t"))
 
 def data_exists() -> bool:
 	return Path(DEFAULT_SAVE_PATH).exists()
